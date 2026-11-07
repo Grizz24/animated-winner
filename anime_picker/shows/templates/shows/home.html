@@ -1,0 +1,66 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Picker</title>
+    <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+</head>
+<body>
+    <h1>Welcome to Anime Picker</h1>
+
+    <div id="container">
+        <h2>Don't know what to watch?</h2>
+        <h3>What do you feel like?</h3>
+    </div>
+
+    <div class="btn">
+        <button id="surpriseBtn">Surprise Me</button>
+        <button id="continueBtn">Continue Watching</button>
+        <button id="newBtn">Something New</button>
+    </div>
+
+    <div class="stats">
+        <h3>Your Stats</h3>
+        <div class="score">
+            <p>Watching : {{ watching_count }}</p>
+            <p>Planned : {{ planned_count }}</p>
+            <p>Done : {{ done_count }}</p>
+        </div>
+    </div>
+
+    <div class="add">
+        <h3>Quick Add</h3>
+
+        <form action="{% url 'quick_add' %}" method="POST">
+            {% csrf_token %}
+            <label for="id_name">Anime Name:</label>
+            <input type="text" id="id_name" name="name" placeholder="Add Anime" maxlength="200" required>
+            <label for="id_status">Status:</label>
+            <select id="id_status" name="status">
+                <option value="Watched">Watched</option>
+                <option value="Planning To" selected>Planning To</option>
+                <option value="Watching">Watching</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+        <p><a href="{% url 'add_show' %}">Add with full details</a></p>
+    </div>
+
+    <div class="added_list">
+        <h3>Recent Added</h3>
+        <ul>
+            {% for show in recent %}
+                <li>{{ show.name }}</li>
+            {% empty %}
+                <li>Nothing added yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        window.PICK_URL = "{% url 'pick' %}";
+    </script>
+    <script src="{% static 'js/home_script.js' %}"></script>
+</body>
+</html>

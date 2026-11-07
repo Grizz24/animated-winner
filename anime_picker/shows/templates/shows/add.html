@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Show</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input,
+        select {
+            background: #2b2b2b;
+            color: white;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .error {
+            color: #ff6b6b;
+            font-size: 13px;
+            margin: 4px 0 0;
+        }
+
+        .back {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back a {
+            color: #9ad;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Add Show</h1>
+
+        <form method="POST" action="{% url 'add_show' %}">
+            {% csrf_token %}
+
+            <!-- Show Name -->
+            <div>
+                <label for="showName">Name of Show</label>
+                <input type="text" id="showName" name="name" placeholder="Enter show name"
+                       maxlength="200" value="{{ form.name.value|default:'' }}" required>
+                {% for e in form.name.errors %}<p class="error">{{ e }}</p>{% endfor %}
+            </div>
+
+            <!-- Movie or Series -->
+            <div>
+                <label>Type</label>
+                <div class="radio-group">
+                    {% for value, label in form.fields.media_type.choices %}
+                    <label>
+                        <input type="radio" name="media_type" value="{{ value }}"
+                               {% if form.media_type.value|default:'Series' == value %}checked{% endif %} required>
+                        {{ label }}
+                    </label>
+                    {% endfor %}
+                </div>
+                {% for e in form.media_type.errors %}<p class="error">{{ e }}</p>{% endfor %}
+            </div>
+
+            <!-- Seasons (series only) -->
+            <div class="series-only">
+                <label for="seasons">Number of Seasons</label>
+                <input type="number" id="seasons" name="seasons" min="1"
+                       value="{{ form.seasons.value|default:'' }}">
+                {% for e in form.seasons.errors %}<p class="error">{{ e }}</p>{% endfor %}
+            </div>
+
+            <!-- Episodes (series only) -->
+            <div class="series-only">
+                <label for="episodes">Number of Episodes</label>
+                <input type="number" id="episodes" name="episodes" min="1"
+                       value="{{ form.episodes.value|default:'' }}">
+                {% for e in form.episodes.errors %}<p class="error">{{ e }}</p>{% endfor %}
+            </div>
+
+            <!-- Genre -->
+            <div>
+                <label for="genre">Genre</label>
+                <select id="genre" name="genre" required>
+                    <option value="">Select Genre</option>
+                    {% for value, label in form.fields.genre.choices %}
+                        {% if value %}
+                        <option value="{{ value }}" {% if form.genre.value == value %}selected{% endif %}>{{ label }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                {% for e in form.genre.errors %}<p class="error">{{ e }}</p>{% endfor %}
+            </div>
+
+            <!-- Status -->
+            <div>
+                <label>Status</label>
+                <div class="radio-group">
+                    {% for value, label in form.fields.status.choices %}
+                    <label>
+                        <input type="radio" name="status" value="{{ value }}"
+                               {% if form.status.value == value %}checked{% endif %} required>
+                        {{ label }}
+                    </label>
+                    {% endfor %}
+                </div>
+                {% for e in form.status.errors %}<p class="error">{{ e }}</p>{% endfor %}
+            </div>
+
+            <!-- Submit -->
+            <button type="submit">Add Show</button>
+        </form>
+
+        <p class="back"><a href="{% url 'home' %}">Back to home</a></p>
+    </div>
+
+    <script>
+        // Seasons/episodes only apply to series, so hide them for movies.
+        const typeRadios = document.querySelectorAll('input[name="media_type"]');
+        const seriesFields = document.querySelectorAll('.series-only');
+        function updateSeriesFields() {
+            const checked = document.querySelector('input[name="media_type"]:checked');
+            const isSeries = !checked || checked.value === 'Series';
+            seriesFields.forEach(el => { el.style.display = isSeries ? '' : 'none'; });
+        }
+        typeRadios.forEach(r => r.addEventListener('change', updateSeriesFields));
+        updateSeriesFields();
+    </script>
+
+</body>
+</html>

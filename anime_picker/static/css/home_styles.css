@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: white;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 25px;
+}
+
+#container,
+.stats,
+.add,
+.added_list {
+    background: #1e1e1e;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+button,
+input[type="submit"] {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #4CAF50;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: #45a049;
+}
+
+.score {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.add form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+}
+
+.add label {
+    font-weight: bold;
+}
+
+.add input[type="text"],
+.add select {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #2b2b2b;
+    color: white;
+    font-size: 15px;
+}
+
+.add a {
+    color: #9ad;
+}
+
+.added_list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.added_list li {
+    padding: 6px 0;
+}
